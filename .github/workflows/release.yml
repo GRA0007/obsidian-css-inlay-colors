@@ -8,7 +8,7 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  covector:
+  version-or-release:
     runs-on: ubuntu-latest
     outputs:
       releaseId: ${{ steps.covector.outputs.releaseId }}
@@ -46,23 +46,14 @@ jobs:
           branch: release
           body: ${{ steps.covector.outputs.change }}
 
-  release:
-    needs: covector
-    if: needs.covector.outputs.commandRan == 'publish' && needs.covector.outputs.shouldPublish == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: corepack enable
-      - uses: actions/setup-node@v4
-        with:
-          cache: yarn
-      - run: yarn install
+      # If publishing (creating a release)
       - run: yarn build
+        if: steps.covector.outputs.commandRan == 'publish' && steps.covector.outputs.published-obsidian-css-inlay-colors == 'true'
       - uses: xresloader/upload-to-github-release@v1.6.0
+        if: steps.covector.outputs.commandRan == 'publish' && steps.covector.outputs.published-obsidian-css-inlay-colors == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ needs.covector.outputs.releaseId }}
+          release_id: ${{ steps.covector.outputs.releaseId }}
           draft: false
           file: main.js;manifest.json;styles.css
-
