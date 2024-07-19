@@ -3,7 +3,7 @@
   "name": "CSS Inlay Colors",
   "version": "0.1.0",
   "minAppVersion": "0.15.0",
-  "description": "Show inline color hints for CSS colors in Obsidian",
+  "description": "Show inline color hints for CSS colors",
   "author": "Benji Grant",
   "authorUrl": "https://bengrant.dev",
   "fundingUrl": {
