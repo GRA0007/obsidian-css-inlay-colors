@@ -466,9 +466,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"obsidian-css-colors@workspace:.":
+"obsidian-css-inlay-colors@workspace:.":
   version: 0.0.0-use.local
-  resolution: "obsidian-css-colors@workspace:."
+  resolution: "obsidian-css-inlay-colors@workspace:."
   dependencies:
     "@biomejs/biome": "npm:^1.8.3"
     "@codemirror/language": "npm:^6.10.2"

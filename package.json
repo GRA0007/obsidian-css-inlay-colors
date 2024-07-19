@@ -1,5 +1,5 @@
 {
-  "name": "obsidian-css-colors",
+  "name": "obsidian-css-inlay-colors",
   "version": "0.0.1",
   "packageManager": "yarn@4.3.1",
   "description": "Show inline color hints for CSS colors in Obsidian",
@@ -26,7 +26,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GRA0007/obsidian-css-colors.git"
+    "url": "https://github.com/GRA0007/obsidian-css-inlay-colors.git"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",

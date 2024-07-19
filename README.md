@@ -1,4 +1,4 @@
-# Obsidian CSS Colors
+# Obsidian CSS Inlay Colors
 
 Show inline color hints for CSS colors in Obsidian.
 

@@ -29,7 +29,7 @@ export default class CssColorsPlugin extends Plugin {
       }
     })
 
-    // this.addSettingTab(new SampleSettingTab(this.app, this))
+    // this.addSettingTab(new CssColorsSettingsTab(this.app, this))
   }
 
   onunload() {}
@@ -43,7 +43,7 @@ export default class CssColorsPlugin extends Plugin {
   // }
 }
 
-// class SampleSettingTab extends PluginSettingTab {
+// class CssColorsSettingsTab extends PluginSettingTab {
 //   plugin: CssColorsPlugin
 
 //   constructor(app: App, plugin: CssColorsPlugin) {
