@@ -1,0 +1,41 @@
+name: Checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - "biome.json"
+      - "main.ts"
+      - "package.json"
+      - "tsconfig.json"
+      - "yarn.lock"
+      - ".github/workflows/checks.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          cache: yarn
+      - run: yarn install
+      - run: yarn biome ci --reporter=github --error-on-warnings
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          cache: yarn
+      - run: yarn install
+      - run: yarn tsc

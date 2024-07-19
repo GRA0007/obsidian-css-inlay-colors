@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  covector:
+    runs-on: ubuntu-latest
+    outputs:
+      releaseId: ${{ steps.covector.outputs.releaseId }}
+      commandRan: ${{ steps.covector.outputs.commandRan }}
+      shouldPublish: ${{ steps.covector.outputs.published-obsidian-css-inlay-colors }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # required for use of git history
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          cache: yarn
+      - run: yarn install
+      - uses: jbolda/covector/packages/action@covector-v0
+        id: covector
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          command: version-or-publish
+          createRelease: true
+          draftRelease: true
+
+      # If versioning (creating a version PR)
+      - name: update plugin manifest version
+        run: yarn run version
+        if: steps.covector.outputs.commandRan == 'version'
+      - name: create pr
+        uses: peter-evans/create-pull-request@v6
+        if: steps.covector.outputs.commandRan == 'version'
+        with:
+          title: Publish New Version
+          commit-message: Publish new version
+          labels: release
+          branch: release
+          body: ${{ steps.covector.outputs.change }}
+
+  release:
+    needs: covector
+    if: needs.covector.outputs.commandRan == 'publish' && needs.covector.outputs.shouldPublish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          cache: yarn
+      - run: yarn install
+      - run: yarn build
+      - uses: xresloader/upload-to-github-release@v1.6.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: ${{ needs.covector.outputs.releaseId }}
+          draft: false
+          file: main.js;manifest.json;styles.css
+

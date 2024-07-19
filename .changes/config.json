@@ -1,0 +1,17 @@
+{
+  "gitSiteUrl": "https://github.com/GRA0007/obsidian-css-inlay-colors/",
+  "changeTags": {
+    "feat": "New Features",
+    "fix": "Bug Fixes",
+    "perf": "Performance Improvements"
+  },
+  "packages": {
+    "obsidian-css-inlay-colors": {
+      "version": true,
+      "path": ".",
+      "releaseTag": "${ pkgFile.version }",
+      "getPublishedVersion": "curl -s https://api.github.com/repos/GRA0007/obsidian-css-inlay-colors/releases/latest | jq -r '.tag_name'",
+      "publish": "echo publish"
+    }
+  }
+}
