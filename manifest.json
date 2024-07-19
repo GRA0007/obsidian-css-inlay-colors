@@ -1,11 +1,14 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
-	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
-	"isDesktopOnly": false
+  "id": "css-colors",
+  "name": "CSS Inlay Colors",
+  "version": "0.0.1",
+  "minAppVersion": "0.15.0",
+  "description": "Show inline color hints for CSS colors in Obsidian",
+  "author": "Benji Grant",
+  "authorUrl": "https://bengrant.dev",
+  "fundingUrl": {
+    "Ko-fi": "https://ko-fi.com/benpai",
+    "GitHub Sponsor": "https://github.com/sponsors/GRA0007"
+  },
+  "isDesktopOnly": false
 }
