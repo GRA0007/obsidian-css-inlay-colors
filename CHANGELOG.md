@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.2.0]
+
+### New Features
+
+- [`56d2d42`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/56d2d422d707e2f810b3947a1bf43afcc9f34f46) Show inlay colors in live preview mode
+
 ## \[0.1.1]
 
 ### Bug Fixes
