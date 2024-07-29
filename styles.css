@@ -8,3 +8,16 @@
   margin-right: .3em;
   margin-top: -.1em;
 }
+
+/* Make inlay colors in the live editor appear part of the code block */
+.css-color-wrapper.cm-inline-code:not(.cm-formatting) {
+  padding-inline-end: 0;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+
+  & + .cm-inline-code:not(.cm-formatting) {
+    padding-inline-start: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+}
