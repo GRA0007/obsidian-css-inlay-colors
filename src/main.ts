@@ -51,7 +51,7 @@ class CssColorsSettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Show in live editor')
-      .setDesc('Enable colors in the live editor')
+      .setDesc('Enable colors in the live editor (requires reload)')
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.showInLiveEditor)

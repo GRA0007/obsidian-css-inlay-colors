@@ -8,13 +8,10 @@ import {
   type ViewUpdate,
   WidgetType,
 } from '@codemirror/view'
-import { type Color, parse } from 'culori'
+import { parse } from 'culori'
 
 class CSSColorInlayWidget extends WidgetType {
-  constructor(
-    readonly color: Color,
-    readonly original: string,
-  ) {
+  constructor(readonly color: string) {
     super()
   }
 
@@ -23,23 +20,15 @@ class CSSColorInlayWidget extends WidgetType {
   }
 
   toDOM() {
-    // const picker = document.createElement('input')
-    // picker.type = 'color'
-    // picker.value = this.color
-
     const inlay = document.createElement('span')
     inlay.className = 'css-color-inlay'
-    inlay.style.background = this.original
+    inlay.style.background = this.color
 
     const wrapper = document.createElement('span')
     wrapper.className = 'cm-inline-code css-color-wrapper'
     wrapper.append(inlay)
 
     return wrapper
-  }
-
-  ignoreEvent() {
-    return false
   }
 }
 
@@ -77,15 +66,14 @@ function createColorWidgets(view: EditorView) {
       to,
       enter: (node) => {
         if (node.name === 'inline-code') {
-          const original = view.state.sliceDoc(node.from, node.to)
-          const color = parse(original)
+          const color = view.state.sliceDoc(node.from, node.to)
 
           // Not a valid color
-          if (color === undefined) return
+          if (parse(color) === undefined) return
 
           const deco = Decoration.widget({
             side: 1,
-            widget: new CSSColorInlayWidget(color, original),
+            widget: new CSSColorInlayWidget(color),
           })
 
           widgets.push(deco.range(node.from))
