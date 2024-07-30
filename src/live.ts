@@ -65,7 +65,7 @@ function createColorWidgets(view: EditorView) {
       from,
       to,
       enter: (node) => {
-        if (node.name === 'inline-code') {
+        if (node.name.includes('inline-code')) {
           const color = view.state.sliceDoc(node.from, node.to)
 
           // Not a valid color
