@@ -10,10 +10,6 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   version-or-release:
     runs-on: ubuntu-latest
-    outputs:
-      releaseId: ${{ steps.covector.outputs.releaseId }}
-      commandRan: ${{ steps.covector.outputs.commandRan }}
-      shouldPublish: ${{ steps.covector.outputs.published-obsidian-css-inlay-colors }}
 
     steps:
       - uses: actions/checkout@v4
