@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.2.1]
+
+### Bug Fixes
+
+- [`d786369`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/d7863691bed7bdc1c18db30dbe724e021eca7f3e) Fix inlay not showing for colors in an ordered/unordered list in live preview mode
+
 ## \[0.2.0]
 
 ### New Features
