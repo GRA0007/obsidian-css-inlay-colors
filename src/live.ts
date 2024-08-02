@@ -32,7 +32,7 @@ class CSSColorInlayWidget extends WidgetType {
   }
 }
 
-export function inlayExtension() {
+export const inlayExtension = () => {
   return ViewPlugin.fromClass(
     class {
       decorations: DecorationSet = Decoration.none
@@ -57,7 +57,11 @@ export function inlayExtension() {
   )
 }
 
-function createColorWidgets(view: EditorView) {
+const createColorWidgets = (view: EditorView) => {
+  // Only create widgets in live preview mode
+  if (!view.dom.parentElement?.classList.contains('is-live-preview'))
+    return Decoration.none
+
   const widgets: Range<Decoration>[] = []
 
   for (const { from, to } of view.visibleRanges) {
@@ -69,7 +73,11 @@ function createColorWidgets(view: EditorView) {
           const color = view.state.sliceDoc(node.from, node.to)
 
           // Not a valid color
-          if (parse(color) === undefined) return
+          try {
+            if (parse(color) === undefined) return
+          } catch {
+            return
+          }
 
           const deco = Decoration.widget({
             side: 1,
