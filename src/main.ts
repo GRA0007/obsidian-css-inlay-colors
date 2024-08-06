@@ -4,10 +4,12 @@ import { inlayExtension } from './live'
 
 interface CssColorsPluginSettings {
   showInLiveEditor: boolean
+  colorPickerEnabled: boolean
 }
 
 const DEFAULT_SETTINGS: CssColorsPluginSettings = {
   showInLiveEditor: true,
+  colorPickerEnabled: false,
 }
 
 export default class CssColorsPlugin extends Plugin {
@@ -19,7 +21,9 @@ export default class CssColorsPlugin extends Plugin {
     this.registerMarkdownPostProcessor(inlayPostProcessor)
 
     if (this.settings.showInLiveEditor) {
-      this.registerEditorExtension(inlayExtension())
+      this.registerEditorExtension(
+        inlayExtension(this.settings.colorPickerEnabled),
+      )
     }
 
     this.addSettingTab(new CssColorsSettingsTab(this.app, this))
@@ -50,8 +54,8 @@ class CssColorsSettingsTab extends PluginSettingTab {
     containerEl.empty()
 
     new Setting(containerEl)
-      .setName('Show in live editor')
-      .setDesc('Enable colors in the live editor (requires reload)')
+      .setName('Show in live preview mode')
+      .setDesc('Enable color inlays in the live preview (requires reload).')
       .addToggle((toggle) =>
         toggle
           .setValue(this.plugin.settings.showInLiveEditor)
@@ -60,5 +64,21 @@ class CssColorsSettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings()
           }),
       )
+
+    new Setting(containerEl)
+      .setName('Enable the color picker')
+      .setDesc('Allows you to edit a color by clicking on the inlay.')
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.colorPickerEnabled)
+          .onChange(async (value) => {
+            this.plugin.settings.colorPickerEnabled = value
+            await this.plugin.saveSettings()
+          }),
+      )
+      .descEl.createDiv({
+        text: 'Opacity and colors outside of the sRGB color space are not supported.',
+        cls: 'mod-warning',
+      })
   }
 }
