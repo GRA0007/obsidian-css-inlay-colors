@@ -10,13 +10,7 @@ To use, just put any valid CSS color syntax in a code block like so: \`#8A5CF5\`
 
 <img src="example.jpg" alt="Example of the extension running for all CSS color formats" width="200">
 
-## Todo
-
-This plugin is still in alpha. Before v1.0.0 is released I want to finish the following features:
-
-- [x] Show colors in reading mode
-- [x] Show colors in live preview mode
-- [ ] Edit colors with a color picker in live preview mode
+Enable the color picker setting to change a color using a color picker in live preview mode. Note that the color picker does not support opacity, and will only let you select from sRGB colors. It will attempt to preserve the existing format you have written, as well as any existing opacity.
 
 ## Development
 
