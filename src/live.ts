@@ -41,6 +41,7 @@ class CSSColorInlayWidget extends WidgetType {
     readonly text: string,
     readonly color: Color,
     readonly colorPickerEnabled: boolean,
+    readonly view: EditorView,
   ) {
     super()
   }
@@ -60,10 +61,14 @@ class CSSColorInlayWidget extends WidgetType {
       input.value = formatHex(this.color)
       input.addEventListener('change', (e) => {
         if (!(e.currentTarget instanceof HTMLInputElement)) return
-        console.log(
-          'result',
-          formatColor(this.text, this.color, e.currentTarget.value),
-        )
+        const pos = this.view.posAtDOM(wrapper)
+        this.view.dispatch({
+          changes: {
+            from: pos,
+            to: pos + this.text.length,
+            insert: formatColor(this.text, this.color, e.currentTarget.value),
+          },
+        })
       })
       inlay.append(input)
     }
@@ -102,7 +107,12 @@ const createColorWidgets = (view: EditorView, colorPickerEnabled: boolean) => {
 
           const deco = Decoration.widget({
             side: 1,
-            widget: new CSSColorInlayWidget(text, color, colorPickerEnabled),
+            widget: new CSSColorInlayWidget(
+              text,
+              color,
+              colorPickerEnabled,
+              view,
+            ),
           })
 
           widgets.push(deco.range(node.from))
