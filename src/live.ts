@@ -10,6 +10,7 @@ import {
 } from '@codemirror/view'
 import type { NodeProp } from '@lezer/common'
 import { type Color, formatHex, parse } from 'culori'
+import { editorLivePreviewField } from 'obsidian'
 import { formatColor } from './formatColor'
 
 export const inlayExtension = (colorPickerEnabled: boolean) => {
@@ -92,8 +93,7 @@ class CSSColorInlayWidget extends WidgetType {
 
 const createColorWidgets = (view: EditorView, colorPickerEnabled: boolean) => {
   // Only create widgets in live preview mode
-  if (!view.dom.parentElement?.classList.contains('is-live-preview'))
-    return Decoration.none
+  if (!view.state.field(editorLivePreviewField)) return Decoration.none
 
   const widgets: Range<Decoration>[] = []
 
