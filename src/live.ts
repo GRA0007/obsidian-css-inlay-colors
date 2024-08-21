@@ -61,13 +61,21 @@ class CSSColorInlayWidget extends WidgetType {
       input.type = 'color'
       input.value = formatHex(this.color)
       input.addEventListener('change', (e) => {
-        if (!(e.currentTarget instanceof HTMLInputElement)) return
+        if (
+          !e.currentTarget ||
+          !(e.currentTarget as Node).instanceOf(HTMLInputElement)
+        )
+          return
         const pos = this.view.posAtDOM(wrapper)
         this.view.dispatch({
           changes: {
             from: pos,
             to: pos + this.text.length,
-            insert: formatColor(this.text, this.color, e.currentTarget.value),
+            insert: formatColor(
+              this.text,
+              this.color,
+              (e.currentTarget as HTMLInputElement).value,
+            ),
           },
         })
       })
