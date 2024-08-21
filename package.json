@@ -1,7 +1,7 @@
 {
   "name": "obsidian-css-inlay-colors",
   "version": "1.0.0",
-  "packageManager": "yarn@4.3.1",
+  "packageManager": "yarn@4.4.0",
   "description": "Show inline color hints for CSS colors",
   "main": "main.js",
   "scripts": {

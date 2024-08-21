@@ -6,11 +6,23 @@
 
 Show inline color hints for CSS colors in Obsidian.
 
-To use, just put any valid CSS color syntax in a code block like so: \`#8A5CF5\`.
+To use, just put any valid CSS color syntax in a code block like so: \`\#8A5CF5\`.
 
 <img src="example.jpg" alt="Example of the extension running for all CSS color formats" width="200">
 
+### Color Picker
+
 Enable the color picker setting to change a color using a color picker in live preview mode. Note that the color picker does not support opacity, and will only let you select from sRGB colors. It will attempt to preserve the existing format you have written, as well as any existing opacity.
+
+### Custom CSS
+
+Customize the inlays by targeting the `.css-color-inlay` class. For example, you can make them circular with the following snippet:
+
+```css
+.css-color-inlay {
+  border-radius: 100px;
+}
+```
 
 ## Development
 

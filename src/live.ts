@@ -1,4 +1,4 @@
-import { syntaxTree } from '@codemirror/language'
+import { syntaxTree, tokenClassNodeProp } from '@codemirror/language'
 import type { Range } from '@codemirror/state'
 import {
   Decoration,
@@ -8,7 +8,9 @@ import {
   type ViewUpdate,
   WidgetType,
 } from '@codemirror/view'
+import type { NodeProp } from '@lezer/common'
 import { type Color, formatHex, parse } from 'culori'
+import { editorLivePreviewField } from 'obsidian'
 import { formatColor } from './formatColor'
 
 export const inlayExtension = (colorPickerEnabled: boolean) => {
@@ -53,20 +55,28 @@ class CSSColorInlayWidget extends WidgetType {
   toDOM() {
     const inlay = document.createElement('label')
     inlay.className = 'css-color-inlay'
-    inlay.style.background = this.text
+    inlay.style.setProperty('--css-color-inlay-color', this.text)
 
     if (this.colorPickerEnabled) {
       const input = document.createElement('input')
       input.type = 'color'
       input.value = formatHex(this.color)
       input.addEventListener('change', (e) => {
-        if (!(e.currentTarget instanceof HTMLInputElement)) return
+        if (
+          !e.currentTarget ||
+          !(e.currentTarget as Node).instanceOf(HTMLInputElement)
+        )
+          return
         const pos = this.view.posAtDOM(wrapper)
         this.view.dispatch({
           changes: {
             from: pos,
             to: pos + this.text.length,
-            insert: formatColor(this.text, this.color, e.currentTarget.value),
+            insert: formatColor(
+              this.text,
+              this.color,
+              (e.currentTarget as HTMLInputElement).value,
+            ),
           },
         })
       })
@@ -83,8 +93,7 @@ class CSSColorInlayWidget extends WidgetType {
 
 const createColorWidgets = (view: EditorView, colorPickerEnabled: boolean) => {
   // Only create widgets in live preview mode
-  if (!view.dom.parentElement?.classList.contains('is-live-preview'))
-    return Decoration.none
+  if (!view.state.field(editorLivePreviewField)) return Decoration.none
 
   const widgets: Range<Decoration>[] = []
 
@@ -93,7 +102,9 @@ const createColorWidgets = (view: EditorView, colorPickerEnabled: boolean) => {
       from,
       to,
       enter: (node) => {
-        if (node.name.includes('inline-code')) {
+        if (
+          node.type.prop(tokenClassNodeProp)?.split(' ').includes('inline-code')
+        ) {
           const text = view.state.sliceDoc(node.from, node.to)
 
           // Not a valid color
@@ -122,4 +133,9 @@ const createColorWidgets = (view: EditorView, colorPickerEnabled: boolean) => {
   }
 
   return Decoration.set(widgets)
+}
+
+// Codemirror does not correctly export a type for this constant, but it does exist
+declare module '@codemirror/language' {
+  const tokenClassNodeProp: NodeProp<string>
 }
