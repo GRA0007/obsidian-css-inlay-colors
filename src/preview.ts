@@ -14,7 +14,7 @@ export const inlayPostProcessor = (el: HTMLElement) => {
     code.createSpan({
       prepend: true,
       cls: 'css-color-inlay',
-      attr: { style: `background: ${color};` },
+      attr: { style: `--css-color-inlay-color: ${color};` },
     })
   }
 }

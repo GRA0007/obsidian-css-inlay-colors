@@ -54,7 +54,7 @@ class CSSColorInlayWidget extends WidgetType {
   toDOM() {
     const inlay = document.createElement('label')
     inlay.className = 'css-color-inlay'
-    inlay.style.background = this.text
+    inlay.style.setProperty('--css-color-inlay-color', this.text)
 
     if (this.colorPickerEnabled) {
       const input = document.createElement('input')
