@@ -1,5 +1,17 @@
 # Changelog
 
+## \[1.1.0]
+
+### New Features
+
+- [`f115da2`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/f115da2d6df6d4cdd937e4893eb1280136ecc783) Use a css variable for the inlay background color instead of setting it directly via an inline style
+
+### Bug Fixes
+
+- [`8679d8b`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/8679d8bc527ad2e26beff06d5fb3a119c7571eb5) Swap to a more robust method of determining the node type in live preview mode
+- [`47bda88`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/47bda8844d7db564489096a959b6dc1722dc4011) Use a cross-window capable version of `instanceof`, which fixes the color picker not working in pop-out windows
+- [`f6ce7a3`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/f6ce7a343063a08e3f6c1fd67fcecb7a0f73490b) Use the provided Obsidian state field to determine if the editor is in live preview mode
+
 ## \[1.0.0]
 
 ### New Features
