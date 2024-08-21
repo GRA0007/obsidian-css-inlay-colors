@@ -1,4 +1,4 @@
-import { syntaxTree } from '@codemirror/language'
+import { syntaxTree, tokenClassNodeProp } from '@codemirror/language'
 import type { Range } from '@codemirror/state'
 import {
   Decoration,
@@ -8,6 +8,7 @@ import {
   type ViewUpdate,
   WidgetType,
 } from '@codemirror/view'
+import type { NodeProp } from '@lezer/common'
 import { type Color, formatHex, parse } from 'culori'
 import { formatColor } from './formatColor'
 
@@ -93,7 +94,9 @@ const createColorWidgets = (view: EditorView, colorPickerEnabled: boolean) => {
       from,
       to,
       enter: (node) => {
-        if (node.name.includes('inline-code')) {
+        if (
+          node.type.prop(tokenClassNodeProp)?.split(' ').includes('inline-code')
+        ) {
           const text = view.state.sliceDoc(node.from, node.to)
 
           // Not a valid color
@@ -122,4 +125,9 @@ const createColorWidgets = (view: EditorView, colorPickerEnabled: boolean) => {
   }
 
   return Decoration.set(widgets)
+}
+
+// Codemirror does not correctly export a type for this constant, but it does exist
+declare module '@codemirror/language' {
+  const tokenClassNodeProp: NodeProp<string>
 }
