@@ -21,7 +21,7 @@
 }
 
 /* Make inlay colors in the live editor appear part of the code block */
-.css-color-wrapper.cm-inline-code:not(.cm-formatting) {
+.css-color-wrapper:not(:has(.css-color-name-hidden)).cm-inline-code:not(.cm-formatting) {
   padding-inline-end: 0;
   border-start-end-radius: 0;
   border-end-end-radius: 0;

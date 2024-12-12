@@ -16,9 +16,7 @@ export default class CssColorsPlugin extends Plugin {
     this.registerMarkdownPostProcessor(inlayPostProcessor(this.settings))
 
     if (this.settings.showInLiveEditor) {
-      this.registerEditorExtension(
-        inlayExtension(this.settings.colorPickerEnabled),
-      )
+      this.registerEditorExtension(inlayExtension(this.settings))
     }
 
     this.addSettingTab(new CssColorsSettingsTab(this.app, this))
