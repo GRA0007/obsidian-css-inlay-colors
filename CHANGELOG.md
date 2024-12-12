@@ -1,5 +1,11 @@
 # Changelog
 
+## \[1.2.0]
+
+### New Features
+
+- [`33aca1c`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/33aca1c2481ebb1296147cb4723ccd2723e53ff2) Adds a setting to hide color names so only the inlay swatch is visible
+
 ## \[1.1.0]
 
 ### New Features
