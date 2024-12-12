@@ -12,23 +12,25 @@ import type { NodeProp } from '@lezer/common'
 import { type Color, formatHex, parse } from 'culori'
 import { editorLivePreviewField } from 'obsidian'
 import { formatColor } from './formatColor'
+import type { CssColorsPluginSettings } from './settings'
 
-export const inlayExtension = (colorPickerEnabled: boolean) => {
+export const inlayExtension = (settings: CssColorsPluginSettings) => {
   return ViewPlugin.fromClass(
     class {
       decorations: DecorationSet = Decoration.none
 
       constructor(public view: EditorView) {
-        this.decorations = createColorWidgets(view, colorPickerEnabled)
+        this.decorations = createColorWidgets(view, settings)
       }
 
       update(update: ViewUpdate) {
         if (
+          settings.hideNames ||
           update.docChanged ||
           update.viewportChanged ||
           syntaxTree(update.startState) !== syntaxTree(update.state)
         ) {
-          this.decorations = createColorWidgets(update.view, colorPickerEnabled)
+          this.decorations = createColorWidgets(update.view, settings)
         }
       }
     },
@@ -43,6 +45,7 @@ class CSSColorInlayWidget extends WidgetType {
     readonly text: string,
     readonly color: Color,
     readonly colorPickerEnabled: boolean,
+    readonly hideName: boolean,
     readonly view: EditorView,
   ) {
     super()
@@ -54,7 +57,7 @@ class CSSColorInlayWidget extends WidgetType {
 
   toDOM() {
     const inlay = document.createElement('label')
-    inlay.className = 'css-color-inlay'
+    inlay.className = `css-color-inlay ${this.hideName ? 'css-color-name-hidden' : ''}`
     inlay.style.setProperty('--css-color-inlay-color', this.text)
 
     if (this.colorPickerEnabled) {
@@ -91,7 +94,10 @@ class CSSColorInlayWidget extends WidgetType {
   }
 }
 
-const createColorWidgets = (view: EditorView, colorPickerEnabled: boolean) => {
+const createColorWidgets = (
+  view: EditorView,
+  settings: CssColorsPluginSettings,
+) => {
   // Only create widgets in live preview mode
   if (!view.state.field(editorLivePreviewField)) return Decoration.none
 
@@ -116,17 +122,37 @@ const createColorWidgets = (view: EditorView, colorPickerEnabled: boolean) => {
             return
           }
 
-          const deco = Decoration.widget({
-            side: 1,
-            widget: new CSSColorInlayWidget(
-              text,
-              color,
-              colorPickerEnabled,
-              view,
-            ),
-          })
+          if (
+            settings.hideNames &&
+            !view.state.selection.ranges.some(
+              (range) => range.from - 1 <= node.to && range.to + 1 >= node.from,
+            )
+          ) {
+            const deco = Decoration.replace({
+              widget: new CSSColorInlayWidget(
+                text,
+                color,
+                settings.colorPickerEnabled,
+                true,
+                view,
+              ),
+            })
 
-          widgets.push(deco.range(node.from))
+            widgets.push(deco.range(node.from, node.to))
+          } else {
+            const deco = Decoration.widget({
+              side: 1,
+              widget: new CSSColorInlayWidget(
+                text,
+                color,
+                settings.colorPickerEnabled,
+                false,
+                view,
+              ),
+            })
+
+            widgets.push(deco.range(node.from))
+          }
         }
       },
     })
