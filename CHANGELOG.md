@@ -1,5 +1,13 @@
 # Changelog
 
+## \[1.3.0]
+
+### New Features
+
+- [`937d95f`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/937d95f16fd78df4d5217077ede6c9beef3c03ae) Adds an option to copy the color to the clipboard on click in reading mode
+- [`b0d482f`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/b0d482fb4faf1cc66d8ac4d291426700b72946d7) Surround colors in square brackets to hide the color names on a case-by-case basis
+- [`31bb045`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/31bb0451a69bc11ad23f1ddb170c4c9a48353235) Upgrades all packages and swaps to pnpm for development
+
 ## \[1.2.0]
 
 ### New Features
