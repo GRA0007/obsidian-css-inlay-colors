@@ -2,7 +2,7 @@ import { type Color, converter, formatCss, round } from 'culori'
 
 const twoDecimals = round(2)
 const fourDecimals = round(4)
-const re = /[0-9\.%]+/g
+const re = /[0-9.%]+/g
 
 /** Format a hex the same as an existing color format */
 export const formatColor = (
