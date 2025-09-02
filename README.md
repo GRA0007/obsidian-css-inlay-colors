@@ -18,6 +18,12 @@ Enable the color picker setting to change a color using a color picker in live p
 
 By default, colors can be copied to the clipboard by clicking on them. This only works in reading mode, and can be disabled in the plugin settings.
 
+### Hide Color Names
+
+Surround a color with square brackets (\`[\#663399]\`) to hide the color name and only show the inlay swatch in live preview and reading mode.
+
+There's also an option in the plugin settings to hide all color names globally.
+
 ### Custom CSS
 
 Customize the inlays by targeting the `.css-color-inlay` class. For example, you can make them circular with the following snippet:

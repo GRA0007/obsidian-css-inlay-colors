@@ -5,7 +5,14 @@ import type { CssColorsPluginSettings } from './settings'
 export const inlayPostProcessor =
   (settings: CssColorsPluginSettings) => (el: HTMLElement) => {
     for (const code of el.findAll('code')) {
-      const color = code.innerText.trim()
+      let color = code.innerText.trim()
+      let isNameHidden = false
+
+      // If color is surrounded with square brackets, the name should be hidden
+      if (color.startsWith('[') && color.endsWith(']')) {
+        color = color.slice(1, -1)
+        isNameHidden = true
+      }
 
       // Not a valid color
       try {
@@ -15,13 +22,13 @@ export const inlayPostProcessor =
       }
 
       // Clear codeblock before adding inlay
-      if (settings.hideNames) {
+      if (settings.hideNames || isNameHidden) {
         code.innerHTML = ''
       }
 
       code.createSpan({
         prepend: true,
-        cls: `css-color-inlay ${settings.hideNames ? 'css-color-name-hidden' : ''}`,
+        cls: `css-color-inlay ${settings.hideNames || isNameHidden ? 'css-color-name-hidden' : ''}`,
         attr: { style: `--css-color-inlay-color: ${color};` },
       })
 

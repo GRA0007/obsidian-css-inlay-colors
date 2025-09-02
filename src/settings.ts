@@ -57,9 +57,9 @@ export class CssColorsSettingsTab extends PluginSettingTab {
       })
 
     new Setting(containerEl)
-      .setName('Hide color names')
+      .setName('Hide all color names')
       .setDesc(
-        'Hides the inline code block in live preview and reading mode so only the color inlay is visible.',
+        'Hides the inline code block in live preview and reading mode for all colors so only the color inlay is visible. You can also do this on a case-by-case basis by surrounding the color with square brackets.',
       )
       .addToggle((toggle) =>
         toggle
