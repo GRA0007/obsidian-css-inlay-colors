@@ -5,12 +5,14 @@ export interface CssColorsPluginSettings {
   showInLiveEditor: boolean
   colorPickerEnabled: boolean
   hideNames: boolean
+  copyOnClick: boolean
 }
 
 export const DEFAULT_SETTINGS: CssColorsPluginSettings = {
   showInLiveEditor: true,
   colorPickerEnabled: false,
   hideNames: false,
+  copyOnClick: true,
 }
 
 export class CssColorsSettingsTab extends PluginSettingTab {
@@ -64,6 +66,20 @@ export class CssColorsSettingsTab extends PluginSettingTab {
           .setValue(this.plugin.settings.hideNames)
           .onChange(async (value) => {
             this.plugin.settings.hideNames = value
+            await this.plugin.saveSettings()
+          }),
+      )
+
+    new Setting(containerEl)
+      .setName('Copy on click')
+      .setDesc(
+        'Allows clicking on a color in reading mode to copy it to your clipboard.',
+      )
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.copyOnClick)
+          .onChange(async (value) => {
+            this.plugin.settings.copyOnClick = value
             await this.plugin.saveSettings()
           }),
       )

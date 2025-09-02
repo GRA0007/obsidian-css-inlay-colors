@@ -1,4 +1,5 @@
 import { parse } from 'culori'
+import { Notice } from 'obsidian'
 import type { CssColorsPluginSettings } from './settings'
 
 export const inlayPostProcessor =
@@ -23,5 +24,30 @@ export const inlayPostProcessor =
         cls: `css-color-inlay ${settings.hideNames ? 'css-color-name-hidden' : ''}`,
         attr: { style: `--css-color-inlay-color: ${color};` },
       })
+
+      if (settings.copyOnClick) {
+        code.setAttr('aria-label', 'Click to copy')
+        code.setAttr('style', 'cursor: pointer;')
+        code.addEventListener('click', (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          navigator.clipboard
+            .writeText(color)
+            .then(() => {
+              const toast = document.createDocumentFragment()
+              const toastColor = document.createElement('span')
+              toastColor.className = 'css-color-inlay'
+              toastColor.style = `--css-color-inlay-color: ${color};`
+              toast.append(toastColor)
+              toast.append(
+                document.createTextNode('Copied color to the clipboard'),
+              )
+              new Notice(toast)
+            })
+            .catch(() => {
+              new Notice('Failed to copy color')
+            })
+        })
+      }
     }
   }
