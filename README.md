@@ -26,4 +26,4 @@ Customize the inlays by targeting the `.css-color-inlay` class. For example, you
 
 ## Development
 
-This project uses Biome and Yarn for linting/formatting and package management. Run `yarn dev` to build on changes.
+This project uses [Biome](https://biomejs.dev/) for linting/formatting and [pnpm](https://pnpm.io/) for package management. Run `pnpm dev` to build on changes.

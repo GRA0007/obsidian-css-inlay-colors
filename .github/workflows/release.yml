@@ -12,14 +12,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # required for use of git history
-      - run: corepack enable
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          cache: yarn
-      - run: yarn install
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm i
       - uses: jbolda/covector/packages/action@covector-v0
         id: covector
         with:
@@ -30,7 +31,7 @@ jobs:
 
       # If versioning (creating a version PR)
       - name: update plugin manifest version
-        run: yarn run version
+        run: pnpm run version
         if: steps.covector.outputs.commandRan == 'version'
       - name: create pr
         uses: peter-evans/create-pull-request@v6
@@ -43,7 +44,7 @@ jobs:
           body: ${{ steps.covector.outputs.change }}
 
       # If publishing (creating a release)
-      - run: yarn build
+      - run: pnpm build
         if: steps.covector.outputs.commandRan == 'publish' && steps.covector.outputs.published-obsidian-css-inlay-colors == 'true'
       - uses: xresloader/upload-to-github-release@v1.6.0
         if: steps.covector.outputs.commandRan == 'publish' && steps.covector.outputs.published-obsidian-css-inlay-colors == 'true'
