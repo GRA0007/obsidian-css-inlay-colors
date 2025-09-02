@@ -25,7 +25,7 @@ export const inlayExtension = (settings: CssColorsPluginSettings) => {
 
       update(update: ViewUpdate) {
         if (
-          settings.hideNames ||
+          update.selectionSet ||
           update.docChanged ||
           update.viewportChanged ||
           syntaxTree(update.startState) !== syntaxTree(update.state)
@@ -111,7 +111,14 @@ const createColorWidgets = (
         if (
           node.type.prop(tokenClassNodeProp)?.split(' ').includes('inline-code')
         ) {
-          const text = view.state.sliceDoc(node.from, node.to)
+          let text = view.state.sliceDoc(node.from, node.to)
+          let isNameHidden = false
+
+          // If color is surrounded with square brackets, the name should be hidden
+          if (text.startsWith('[') && text.endsWith(']')) {
+            text = text.slice(1, -1)
+            isNameHidden = true
+          }
 
           // Not a valid color
           let color: Color | undefined
@@ -123,7 +130,7 @@ const createColorWidgets = (
           }
 
           if (
-            settings.hideNames &&
+            (settings.hideNames || isNameHidden) &&
             !view.state.selection.ranges.some(
               (range) => range.from - 1 <= node.to && range.to + 1 >= node.from,
             )
