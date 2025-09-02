@@ -6,13 +6,17 @@
 
 Show inline color hints for CSS colors in Obsidian.
 
-To use, just put any valid CSS color syntax in a code block like so: \`\#8A5CF5\`.
+To use, just put any [valid CSS color syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) in a code block like so: \`\#8A5CF5\`.
 
 <img src="example.jpg" alt="Example of the extension running for all CSS color formats" width="200">
 
 ### Color Picker
 
 Enable the color picker setting to change a color using a color picker in live preview mode. Note that the color picker does not support opacity, and will only let you select from sRGB colors. It will attempt to preserve the existing format you have written, as well as any existing opacity.
+
+### Copy On Click
+
+By default, colors can be copied to the clipboard by clicking on them. This only works in reading mode, and can be disabled in the plugin settings.
 
 ### Custom CSS
 
