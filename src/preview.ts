@@ -16,14 +16,14 @@ export const inlayPostProcessor =
 
       // Not a valid color
       try {
-        if (parse(color) === undefined) return
+        if (parse(color) === undefined) continue
       } catch {
-        return
+        continue
       }
 
       // Clear codeblock before adding inlay
       if (settings.hideNames || isNameHidden) {
-        code.innerHTML = ''
+        code.empty()
       }
 
       code.createSpan({
