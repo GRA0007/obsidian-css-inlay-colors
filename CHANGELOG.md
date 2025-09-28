@@ -1,5 +1,12 @@
 # Changelog
 
+## \[1.3.1]
+
+### Bug Fixes
+
+- [`680c5e4`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/680c5e417c42dff06f3aedf7a680aae6dd21b598) Prevent hex colors without a hash (e.g. `aaa`) from rendering an inlay
+- [`680c5e4`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/680c5e417c42dff06f3aedf7a680aae6dd21b598) Fixes a bug where a non-color code block in reading mode would break all colors after it until an empty line
+
 ## \[1.3.0]
 
 ### New Features

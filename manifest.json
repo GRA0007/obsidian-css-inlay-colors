@@ -1,7 +1,7 @@
 {
   "id": "css-inlay-colors",
   "name": "CSS Inlay Colors",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "minAppVersion": "0.15.0",
   "description": "Show inline color hints for CSS colors",
   "author": "Benji Grant",
