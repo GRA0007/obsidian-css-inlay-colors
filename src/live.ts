@@ -9,9 +9,10 @@ import {
   WidgetType,
 } from '@codemirror/view'
 import type { NodeProp } from '@lezer/common'
-import { type Color, formatHex, parse } from 'culori'
+import { type Color, formatHex } from 'culori'
 import { editorLivePreviewField } from 'obsidian'
 import { formatColor } from './formatColor'
+import { parseColor } from './parseColor'
 import type { CssColorsPluginSettings } from './settings'
 
 export const inlayExtension = (settings: CssColorsPluginSettings) => {
@@ -111,23 +112,9 @@ const createColorWidgets = (
         if (
           node.type.prop(tokenClassNodeProp)?.split(' ').includes('inline-code')
         ) {
-          let text = view.state.sliceDoc(node.from, node.to)
-          let isNameHidden = false
-
-          // If color is surrounded with square brackets, the name should be hidden
-          if (text.startsWith('[') && text.endsWith(']')) {
-            text = text.slice(1, -1)
-            isNameHidden = true
-          }
-
-          // Not a valid color
-          let color: Color | undefined
-          try {
-            color = parse(text)
-            if (color === undefined) return
-          } catch {
-            return
-          }
+          const res = parseColor(view.state.sliceDoc(node.from, node.to))
+          if (!res) return
+          const { text, color, isNameHidden } = res
 
           if (
             (settings.hideNames || isNameHidden) &&
