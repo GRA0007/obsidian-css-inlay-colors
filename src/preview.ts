@@ -1,25 +1,13 @@
-import { parse } from 'culori'
 import { Notice } from 'obsidian'
+import { parseColor } from './parseColor'
 import type { CssColorsPluginSettings } from './settings'
 
 export const inlayPostProcessor =
   (settings: CssColorsPluginSettings) => (el: HTMLElement) => {
     for (const code of el.findAll('code')) {
-      let color = code.innerText.trim()
-      let isNameHidden = false
-
-      // If color is surrounded with square brackets, the name should be hidden
-      if (color.startsWith('[') && color.endsWith(']')) {
-        color = color.slice(1, -1)
-        isNameHidden = true
-      }
-
-      // Not a valid color
-      try {
-        if (parse(color) === undefined) return
-      } catch {
-        return
-      }
+      const res = parseColor(code.innerText.trim())
+      if (!res) continue
+      const { text, isNameHidden } = res
 
       // Clear codeblock before adding inlay
       if (settings.hideNames || isNameHidden) {
@@ -29,7 +17,7 @@ export const inlayPostProcessor =
       code.createSpan({
         prepend: true,
         cls: `css-color-inlay ${settings.hideNames || isNameHidden ? 'css-color-name-hidden' : ''}`,
-        attr: { style: `--css-color-inlay-color: ${color};` },
+        attr: { style: `--css-color-inlay-color: ${text};` },
       })
 
       if (settings.copyOnClick) {
@@ -39,12 +27,12 @@ export const inlayPostProcessor =
           e.preventDefault()
           e.stopPropagation()
           navigator.clipboard
-            .writeText(color)
+            .writeText(text)
             .then(() => {
               const toast = document.createDocumentFragment()
               const toastColor = document.createElement('span')
               toastColor.className = 'css-color-inlay'
-              toastColor.style = `--css-color-inlay-color: ${color};`
+              toastColor.style = `--css-color-inlay-color: ${text};`
               toast.append(toastColor)
               toast.append(
                 document.createTextNode('Copied color to the clipboard'),
