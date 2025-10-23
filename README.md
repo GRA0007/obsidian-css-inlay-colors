@@ -10,6 +10,8 @@ To use, just put any [valid CSS color syntax](https://developer.mozilla.org/en-U
 
 <img src="example.jpg" alt="Example of the extension running for all CSS color formats" width="200">
 
+## Features
+
 ### Color Picker
 
 Enable the color picker setting to change a color using a color picker in live preview mode. Note that the color picker does not support opacity, and will only let you select from sRGB colors. It will attempt to preserve the existing format you have written, as well as any existing opacity.
@@ -23,6 +25,23 @@ By default, colors can be copied to the clipboard by clicking on them. This only
 Surround a color with square brackets (\`[\#663399]\`) to hide the color name and only show the inlay swatch in live preview and reading mode.
 
 There's also an option in the plugin settings to hide all color names globally.
+
+### Custom Palettes
+
+This plugin supports custom color palettes which you can use by enabling the setting and creating a [CSS snippet](https://help.obsidian.md/snippets) file that targets the palette names you want to support.
+
+Enabling the setting exposes classes for every inline code block surrounded by parentheses, replacing all spaces with hyphens, and converting to lowercase. For example, \`(RAL 170 50 10)\` exposes the class `.ral-170-50-10`. If that class gets a `color` set, it will show a color inlay.
+
+#### Predefined Palettes
+
+There are 6 [predefined color palettes](./palettes.css) you can download using the button in the settings, and it includes the following:
+
+- AutoCAD Color Index
+- Australian Color Standard (AS 2700)
+- British Standard Colors (BS 381, BS 4800)
+- Federal Standard (FS 595C, ANA)
+- Pantone
+- RAL Colors (Classic, Design, Effect, Plastics)
 
 ### Custom CSS
 
