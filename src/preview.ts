@@ -5,7 +5,7 @@ import type { CssColorsPluginSettings } from './settings'
 
 export const inlayPostProcessor =
   (settings: CssColorsPluginSettings) => (el: HTMLElement) => {
-    const paletteClasses = getPaletteClasses()
+    const paletteClasses = settings.palettesEnabled ? getPaletteClasses() : []
 
     for (const code of el.findAll('code')) {
       const res = parseColor(code.innerText.trim(), paletteClasses)

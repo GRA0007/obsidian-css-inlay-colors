@@ -108,7 +108,7 @@ const createColorWidgets = (
   if (!view.state.field(editorLivePreviewField)) return Decoration.none
 
   const widgets: Range<Decoration>[] = []
-  const paletteClasses = getPaletteClasses()
+  const paletteClasses = settings.palettesEnabled ? getPaletteClasses() : []
 
   for (const { from, to } of view.visibleRanges) {
     syntaxTree(view.state).iterate({

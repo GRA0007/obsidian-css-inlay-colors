@@ -14,6 +14,7 @@ export const parseColor = (text: string, paletteClasses: string[]) => {
 
   // Is palette color
   if (
+    paletteClasses.length > 0 &&
     text.startsWith('(') &&
     text.endsWith(')') &&
     paletteClasses.includes(getPaletteClass(text.slice(1, -1)))
