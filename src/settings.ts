@@ -164,12 +164,6 @@ export class CssColorsSettingsTab extends PluginSettingTab {
           })
           el.createEl('li', {
             text: createFragment((li) => {
-              li.createEl('strong', { text: 'Pantone' })
-              li.createDiv({ text: 'Example: (pantone 340)' })
-            }),
-          })
-          el.createEl('li', {
-            text: createFragment((li) => {
               li.createEl('strong', {
                 text: 'RAL Colors (Classic, Design, Effect, Plastics)',
               })

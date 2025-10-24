@@ -4,7 +4,7 @@ const SNIPPET_NAME = 'css-inlay-palettes'
 
 /** Normalize a palette name into a class */
 export const getPaletteClass = (text: string) =>
-  text.trim().toLocaleLowerCase().replace(/\s+/, '-')
+  text.trim().toLocaleLowerCase().replace(/\s+/g, '-')
 
 const parsePaletteClasses = (selectorText: string) => {
   return selectorText.split(',').flatMap((selector) => {

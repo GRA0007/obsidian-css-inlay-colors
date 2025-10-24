@@ -40,7 +40,6 @@ There are 6 [predefined color palettes](./palettes.css) you can download using t
 - Australian Color Standard (AS 2700)
 - British Standard Colors (BS 381, BS 4800)
 - Federal Standard (FS 595C, ANA)
-- Pantone
 - RAL Colors (Classic, Design, Effect, Plastics)
 
 ### Custom CSS
