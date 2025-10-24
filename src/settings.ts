@@ -1,11 +1,13 @@
 import { type App, PluginSettingTab, Setting } from 'obsidian'
 import type CssColorsPlugin from './main'
+import { downloadPredefinedPalettes } from './palettes'
 
 export interface CssColorsPluginSettings {
   showInLiveEditor: boolean
   colorPickerEnabled: boolean
   hideNames: boolean
   copyOnClick: boolean
+  palettesEnabled: boolean
 }
 
 export const DEFAULT_SETTINGS: CssColorsPluginSettings = {
@@ -13,6 +15,7 @@ export const DEFAULT_SETTINGS: CssColorsPluginSettings = {
   colorPickerEnabled: false,
   hideNames: false,
   copyOnClick: true,
+  palettesEnabled: false,
 }
 
 export class CssColorsSettingsTab extends PluginSettingTab {
@@ -83,5 +86,91 @@ export class CssColorsSettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings()
           }),
       )
+
+    new Setting(containerEl).setHeading().setName('Custom Palettes')
+
+    new Setting(containerEl)
+      .setName('Enable palette support')
+      .setDesc(
+        createFragment((desc) => {
+          desc.appendText(
+            'Enable custom color palette support. This will generate classes for every inline code block surrounded in parentheses so they can be targeted with a CSS snippet file.',
+          )
+          desc.createEl('br')
+          desc.createEl('a', {
+            text: 'Learn more',
+            href: 'https://github.com/GRA0007/obsidian-css-inlay-colors?tab=readme-ov-file#custom-palettes',
+          })
+        }),
+      )
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.palettesEnabled)
+          .onChange(async (value) => {
+            this.plugin.settings.palettesEnabled = value
+            await this.plugin.saveSettings()
+          }),
+      )
+
+    new Setting(containerEl)
+      .setName('Download predefined palettes')
+      .setDesc(
+        createFragment((desc) => {
+          desc.appendText('You can download a ')
+          desc.createEl('a', {
+            text: 'snippet file',
+            href: 'https://github.com/GRA0007/obsidian-css-inlay-colors/blob/main/palettes.css',
+          })
+          desc.appendText(
+            ' with some predefined palettes. It comes with the following:',
+          )
+        }),
+      )
+      .addButton((button) => {
+        button
+          .setButtonText('Download')
+          .onClick(() => downloadPredefinedPalettes(this.app))
+      })
+      .infoEl.createDiv({ cls: 'setting-item-description' })
+      .createEl('ul', {
+        text: createFragment((el) => {
+          el.createEl('li', {
+            text: createFragment((li) => {
+              li.createEl('strong', { text: 'AutoCAD Color Index' })
+              li.createDiv({ text: 'Example: (aci 91)' })
+            }),
+          })
+          el.createEl('li', {
+            text: createFragment((li) => {
+              li.createEl('strong', {
+                text: 'Australian Color Standard (AS 2700)',
+              })
+              li.createDiv({ text: 'Example: (as N45)' })
+            }),
+          })
+          el.createEl('li', {
+            text: createFragment((li) => {
+              li.createEl('strong', {
+                text: 'British Standard Colors (BS 381, BS 4800)',
+              })
+              li.createDiv({ text: 'Example: (bs 381 593) or (bs 14-E-51)' })
+            }),
+          })
+          el.createEl('li', {
+            text: createFragment((li) => {
+              li.createEl('strong', { text: 'Federal Standard (FS 595C, ANA)' })
+              li.createDiv({ text: 'Example: (fs 11086) or (fs w3-ana-609)' })
+            }),
+          })
+          el.createEl('li', {
+            text: createFragment((li) => {
+              li.createEl('strong', {
+                text: 'RAL Colors (Classic, Design, Effect, Plastics)',
+              })
+              li.createDiv({ text: 'Example: (ral 170 50 10) or (ral 6010)' })
+            }),
+          })
+        }),
+      })
   }
 }

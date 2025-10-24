@@ -1,23 +1,27 @@
 import { Notice } from 'obsidian'
+import { getPaletteClass, getPaletteClasses } from './palettes'
 import { parseColor } from './parseColor'
 import type { CssColorsPluginSettings } from './settings'
 
 export const inlayPostProcessor =
   (settings: CssColorsPluginSettings) => (el: HTMLElement) => {
+    const paletteClasses = settings.palettesEnabled ? getPaletteClasses() : []
+
     for (const code of el.findAll('code')) {
-      const res = parseColor(code.innerText.trim())
+      const res = parseColor(code.innerText.trim(), paletteClasses)
       if (!res) continue
-      const { text, isNameHidden } = res
+      const { text, color, isNameHidden } = res
 
       // Clear codeblock before adding inlay
-      if (settings.hideNames || isNameHidden) {
-        code.innerHTML = ''
-      }
+      if (settings.hideNames || isNameHidden) code.empty()
+
+      const paletteClass =
+        color === 'palette' ? `css-color-palette ${getPaletteClass(text)}` : ''
 
       code.createSpan({
         prepend: true,
-        cls: `css-color-inlay ${settings.hideNames || isNameHidden ? 'css-color-name-hidden' : ''}`,
-        attr: { style: `--css-color-inlay-color: ${text};` },
+        cls: `css-color-inlay ${paletteClass} ${settings.hideNames || isNameHidden ? 'css-color-name-hidden' : ''}`,
+        attr: { style: `color: ${text};` },
       })
 
       if (settings.copyOnClick) {
@@ -31,8 +35,8 @@ export const inlayPostProcessor =
             .then(() => {
               const toast = document.createDocumentFragment()
               const toastColor = document.createElement('span')
-              toastColor.className = 'css-color-inlay'
-              toastColor.style = `--css-color-inlay-color: ${text};`
+              toastColor.className = `css-color-inlay ${paletteClass}`
+              toastColor.style.color = text
               toast.append(toastColor)
               toast.append(
                 document.createTextNode('Copied color to the clipboard'),
