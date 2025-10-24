@@ -1,4 +1,5 @@
 import { Plugin } from 'obsidian'
+import { checkIfSnippetEnabled } from 'src/palettes'
 import { inlayPostProcessor } from 'src/preview'
 import { inlayExtension } from './live'
 import {
@@ -26,6 +27,12 @@ export default class CssColorsPlugin extends Plugin {
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
+  }
+
+  async loadData(): Promise<typeof this.settings> {
+    const data = await super.loadData()
+    const { enabled: palettesEnabled } = await checkIfSnippetEnabled(this.app)
+    return { ...data, palettesEnabled }
   }
 
   async saveSettings() {

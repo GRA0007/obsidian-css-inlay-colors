@@ -11,6 +11,7 @@ export interface CssColorsPluginSettings {
   colorPickerEnabled: boolean
   hideNames: boolean
   copyOnClick: boolean
+  palettesEnabled: boolean
 }
 
 export const DEFAULT_SETTINGS: CssColorsPluginSettings = {
@@ -18,6 +19,7 @@ export const DEFAULT_SETTINGS: CssColorsPluginSettings = {
   colorPickerEnabled: false,
   hideNames: false,
   copyOnClick: true,
+  palettesEnabled: false,
 }
 
 export class CssColorsSettingsTab extends PluginSettingTab {
