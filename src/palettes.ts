@@ -1,6 +1,6 @@
 import { type App, Modal, Notice, normalizePath, Setting } from 'obsidian'
 
-export const SNIPPET_NAME = 'css-inlay-palettes'
+const SNIPPET_NAME = 'css-inlay-palettes'
 
 /** Normalize a palette name into a class */
 export const getPaletteClass = (text: string) =>
@@ -57,24 +57,23 @@ const createPaletteFilePath = (app: App) =>
   normalizePath(`${app.vault.configDir}/snippets/${SNIPPET_NAME}.css`)
 
 /** Snippet exists and is enabled in Obsidian Appearance settings */
-export const checkIfSnippetEnabled = async (app: App) => {
+const checkIfSnippetEnabled = async (app: App) => {
   if (!(await app.vault.adapter.exists(createPaletteFilePath(app))))
-    return { exists: false, enabled: false }
+    return false
 
   const config = await app.vault.adapter.read(
     normalizePath(`${app.vault.configDir}/appearance.json`),
   )
   try {
     const enabledSnippets: string[] = JSON.parse(config).enabledCssSnippets
-    return { exists: true, enabled: enabledSnippets.includes(SNIPPET_NAME) }
+    return enabledSnippets.includes(SNIPPET_NAME)
   } catch {
-    return { exists: true, enabled: false }
+    return false
   }
 }
 
 const confirmIfOverwrite = async (app: App) => {
-  const { exists } = await checkIfSnippetEnabled(app)
-  if (exists)
+  if (await app.vault.adapter.exists(createPaletteFilePath(app)))
     return new Promise<boolean>((resolve) => {
       new ConfirmDownloadModal(app, (confirmed) => resolve(confirmed)).open()
     })

@@ -1,10 +1,6 @@
 import { type App, PluginSettingTab, Setting } from 'obsidian'
 import type CssColorsPlugin from './main'
-import {
-  checkIfSnippetEnabled,
-  downloadPredefinedPalettes,
-  SNIPPET_NAME,
-} from './palettes'
+import { downloadPredefinedPalettes } from './palettes'
 
 export interface CssColorsPluginSettings {
   showInLiveEditor: boolean
@@ -91,18 +87,15 @@ export class CssColorsSettingsTab extends PluginSettingTab {
           }),
       )
 
-    let palettesEnabledStatus: HTMLSpanElement | undefined
+    new Setting(containerEl).setHeading().setName('Custom Palettes')
+
     new Setting(containerEl)
-      .setHeading()
-      .setName('Custom Palettes')
+      .setName('Enable palette support')
       .setDesc(
         createFragment((desc) => {
           desc.appendText(
-            `Create and enable a CSS snippet called ${SNIPPET_NAME}.css. This will generate classes for every inline code block surrounded in parentheses so they can be targeted.`,
+            'Enable custom color palette support. This will generate classes for every inline code block surrounded in parentheses so they can be targeted with a CSS snippet file.',
           )
-          desc.createEl('br')
-          desc.appendText('This feature is currently: ')
-          palettesEnabledStatus = desc.createSpan({ text: 'loading...' })
           desc.createEl('br')
           desc.createEl('a', {
             text: 'Learn more',
@@ -110,23 +103,14 @@ export class CssColorsSettingsTab extends PluginSettingTab {
           })
         }),
       )
-
-    // Display palette
-    checkIfSnippetEnabled(this.app).then(({ exists, enabled }) => {
-      if (!palettesEnabledStatus) return
-      palettesEnabledStatus.empty()
-      palettesEnabledStatus.createEl('strong', {
-        cls: enabled ? 'mod-success' : 'mod-warning',
-        text: enabled ? 'enabled' : 'disabled',
-      })
-      if (!enabled) {
-        palettesEnabledStatus.appendText(
-          exists
-            ? ' (snippet exists but is currently disabled)'
-            : ' (no snippet file found)',
-        )
-      }
-    })
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.palettesEnabled)
+          .onChange(async (value) => {
+            this.plugin.settings.palettesEnabled = value
+            await this.plugin.saveSettings()
+          }),
+      )
 
     new Setting(containerEl)
       .setName('Download predefined palettes')
