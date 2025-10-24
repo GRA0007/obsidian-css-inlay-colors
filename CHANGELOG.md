@@ -1,5 +1,15 @@
 # Changelog
 
+## \[1.4.0]
+
+### New Features
+
+- [`4fdca1a`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/4fdca1a44d81e3270c9280f0f1ee04b1f4d7ddf4) Adds support for custom palettes that let you use standard color charts like RAL (e.g. `(RAL 1004)` or `(aci 91)`)
+
+### Bug Fixes
+
+- [`6c3b4e1`](https://github.com/GRA0007/obsidian-css-inlay-colors/commit/6c3b4e1825a83ec383c2877e7246db9939a28af5) Ensure borders between the preview and text are hidden with certain themes in the live preview mode
+
 ## \[1.3.1]
 
 ### Bug Fixes
