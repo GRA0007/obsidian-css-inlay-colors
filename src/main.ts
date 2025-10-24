@@ -1,6 +1,6 @@
 import { Plugin } from 'obsidian'
-import { inlayPostProcessor } from 'src/preview'
 import { inlayExtension } from './live'
+import { inlayPostProcessor } from './preview'
 import {
   type CssColorsPluginSettings,
   CssColorsSettingsTab,

@@ -1,5 +1,5 @@
 import { type Color, parse, parseHex } from 'culori'
-import { getPaletteClass } from 'src/palettes'
+import { getPaletteClass } from './palettes'
 
 export const parseColor = (text: string, paletteClasses: string[]) => {
   // If color is surrounded with square brackets, the name should be hidden
