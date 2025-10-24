@@ -32,6 +32,17 @@ This plugin supports custom color palettes which you can use by enabling the set
 
 Enabling the setting exposes classes for every inline code block surrounded by parentheses, replacing all spaces with hyphens, and converting to lowercase. For example, \`(RAL 170 50 10)\` exposes the class `.ral-170-50-10`. If that class gets a `color` set, it will show a color inlay.
 
+Note, the plugin detects classes that target `.css-color-inlay` only, see the example below.
+
+```css
+.css-color-inlay.my-cool-color { color: #663399; }
+/* Or, use CSS nesting */
+.css-color-inlay {
+  &.my-hot-color { color: orangered; }
+}
+/* Now `(my cool color)` and `(my hot color)` will have inlays */
+```
+
 #### Predefined Palettes
 
 There are 6 [predefined color palettes](./palettes.css) you can download using the button in the settings, and it includes the following:
