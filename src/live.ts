@@ -12,6 +12,7 @@ import type { NodeProp } from '@lezer/common'
 import { type Color, formatHex } from 'culori'
 import { editorLivePreviewField } from 'obsidian'
 import { formatColor } from './formatColor'
+import { getPaletteClass, getPaletteClasses } from './palettes'
 import { parseColor } from './parseColor'
 import type { CssColorsPluginSettings } from './settings'
 
@@ -44,7 +45,7 @@ export const inlayExtension = (settings: CssColorsPluginSettings) => {
 class CSSColorInlayWidget extends WidgetType {
   constructor(
     readonly text: string,
-    readonly color: Color,
+    readonly color: Color | 'palette',
     readonly colorPickerEnabled: boolean,
     readonly hideName: boolean,
     readonly view: EditorView,
@@ -58,10 +59,14 @@ class CSSColorInlayWidget extends WidgetType {
 
   toDOM() {
     const inlay = document.createElement('label')
-    inlay.className = `css-color-inlay ${this.hideName ? 'css-color-name-hidden' : ''}`
-    inlay.style.setProperty('--css-color-inlay-color', this.text)
+    inlay.className = `css-color-inlay ${
+      this.color === 'palette'
+        ? `css-color-palette ${getPaletteClass(this.text)}`
+        : ''
+    } ${this.hideName ? 'css-color-name-hidden' : ''}`
+    inlay.style.color = this.text
 
-    if (this.colorPickerEnabled) {
+    if (this.colorPickerEnabled && this.color !== 'palette') {
       const input = document.createElement('input')
       input.type = 'color'
       input.value = formatHex(this.color)
@@ -78,7 +83,7 @@ class CSSColorInlayWidget extends WidgetType {
             to: pos + this.text.length,
             insert: formatColor(
               this.text,
-              this.color,
+              this.color as Color,
               (e.currentTarget as HTMLInputElement).value,
             ),
           },
@@ -103,6 +108,7 @@ const createColorWidgets = (
   if (!view.state.field(editorLivePreviewField)) return Decoration.none
 
   const widgets: Range<Decoration>[] = []
+  const paletteClasses = getPaletteClasses()
 
   for (const { from, to } of view.visibleRanges) {
     syntaxTree(view.state).iterate({
@@ -112,7 +118,10 @@ const createColorWidgets = (
         if (
           node.type.prop(tokenClassNodeProp)?.split(' ').includes('inline-code')
         ) {
-          const res = parseColor(view.state.sliceDoc(node.from, node.to))
+          const res = parseColor(
+            view.state.sliceDoc(node.from, node.to),
+            paletteClasses,
+          )
           if (!res) return
           const { text, color, isNameHidden } = res
 

@@ -2,6 +2,57 @@ import { type App, Modal, Notice, normalizePath, Setting } from 'obsidian'
 
 export const SNIPPET_NAME = 'css-inlay-palettes'
 
+/** Normalize a palette name into a class */
+export const getPaletteClass = (text: string) =>
+  text.trim().toLocaleLowerCase().replace(/\s+/, '-')
+
+const parsePaletteClasses = (selectorText: string) => {
+  return selectorText.split(',').flatMap((selector) => {
+    const name = selector
+      .replaceAll('.css-color-inlay', '')
+      .replace(/[&.]/g, '')
+      .trim()
+    return name.toLocaleLowerCase() === name ? [name] : []
+  })
+}
+
+/** Get a list of all palette classes available */
+export const getPaletteClasses = () => {
+  const classes = []
+
+  for (const sheet of document.styleSheets) {
+    for (const rule of sheet.cssRules) {
+      if (
+        rule instanceof CSSStyleRule &&
+        rule.selectorText.contains('.css-color-inlay')
+      ) {
+        // Nested rule
+        if (rule.cssRules.length > 0) {
+          for (const nestedRule of rule.cssRules) {
+            if (
+              nestedRule instanceof CSSStyleRule &&
+              nestedRule.selectorText.startsWith('&') &&
+              nestedRule.styleMap.has('color')
+            ) {
+              classes.push(...parsePaletteClasses(nestedRule.selectorText))
+            }
+          }
+        }
+        // Individual rule (.css-color-inlay.my-color)
+        if (
+          rule.selectorText !== '.css-color-inlay' &&
+          rule.cssRules.length === 0 &&
+          rule.styleMap.has('color')
+        ) {
+          classes.push(...parsePaletteClasses(rule.selectorText))
+        }
+      }
+    }
+  }
+
+  return classes
+}
+
 const createPaletteFilePath = (app: App) =>
   normalizePath(`${app.vault.configDir}/snippets/${SNIPPET_NAME}.css`)
 

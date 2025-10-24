@@ -9,3 +9,7 @@ fs: Federal Standard (FS 595C, ANA)
 pantone: Pantone
 ral: RAL Colors (Classic, Design, Effect, Plastics)
 */
+
+.css-color-inlay {
+  &.aci-0 { color: #000000; }
+}
