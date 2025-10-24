@@ -25,5 +25,8 @@
       "quoteStyle": "single",
       "semicolons": "asNeeded"
     }
+  },
+  "files": {
+    "includes": ["**", "!palettes.css"]
   }
 }
