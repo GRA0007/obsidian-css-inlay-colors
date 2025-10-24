@@ -1,12 +1,16 @@
 import { type App, PluginSettingTab, Setting } from 'obsidian'
 import type CssColorsPlugin from './main'
+import {
+  checkIfSnippetEnabled,
+  downloadPredefinedPalettes,
+  SNIPPET_NAME,
+} from './palettes'
 
 export interface CssColorsPluginSettings {
   showInLiveEditor: boolean
   colorPickerEnabled: boolean
   hideNames: boolean
   copyOnClick: boolean
-  palettesEnabled: boolean
 }
 
 export const DEFAULT_SETTINGS: CssColorsPluginSettings = {
@@ -14,7 +18,6 @@ export const DEFAULT_SETTINGS: CssColorsPluginSettings = {
   colorPickerEnabled: false,
   hideNames: false,
   copyOnClick: true,
-  palettesEnabled: false,
 }
 
 export class CssColorsSettingsTab extends PluginSettingTab {
@@ -86,37 +89,62 @@ export class CssColorsSettingsTab extends PluginSettingTab {
           }),
       )
 
-    new Setting(containerEl).setHeading().setName('Custom Palettes')
-
+    let palettesEnabledStatus: HTMLSpanElement | undefined
     new Setting(containerEl)
-      .setName('Enable palette support')
+      .setHeading()
+      .setName('Custom Palettes')
       .setDesc(
-        'Enable custom color palette support. This will generate classes for every inline code block surrounded in parentheses so they can be targeted with a CSS snippet file.',
+        createFragment((desc) => {
+          desc.appendText(
+            `Create and enable a CSS snippet called ${SNIPPET_NAME}.css. This will generate classes for every inline code block surrounded in parentheses so they can be targeted.`,
+          )
+          desc.createEl('br')
+          desc.appendText('This feature is currently: ')
+          palettesEnabledStatus = desc.createSpan({ text: 'loading...' })
+          desc.createEl('br')
+          desc.createEl('a', {
+            text: 'Learn more',
+            href: 'https://github.com/GRA0007/obsidian-css-inlay-colors?tab=readme-ov-file#custom-palettes',
+          })
+        }),
       )
-      .addToggle((toggle) =>
-        toggle
-          .setValue(this.plugin.settings.palettesEnabled)
-          .onChange(async (value) => {
-            this.plugin.settings.palettesEnabled = value
-            await this.plugin.saveSettings()
-          }),
-      )
-      .infoEl.createDiv({ cls: 'setting-item-description' })
-      .createEl('a', {
-        text: 'Learn how to create your own',
-        href: 'https://github.com/GRA0007/obsidian-css-inlay-colors?tab=readme-ov-file#custom-palettes',
+
+    // Display palette
+    checkIfSnippetEnabled(this.app).then(({ exists, enabled }) => {
+      if (!palettesEnabledStatus) return
+      palettesEnabledStatus.empty()
+      palettesEnabledStatus.createEl('strong', {
+        cls: enabled ? 'mod-success' : 'mod-warning',
+        text: enabled ? 'enabled' : 'disabled',
       })
+      if (!enabled) {
+        palettesEnabledStatus.appendText(
+          exists
+            ? ' (snippet exists but is currently disabled)'
+            : ' (no snippet file found)',
+        )
+      }
+    })
 
     new Setting(containerEl)
       .setName('Download predefined palettes')
       .setDesc(
-        'You can download a snippet file with some predefined palettes. It comes with the following:',
-      )
-      .addButton((button) =>
-        button.setButtonText('Download').onClick(() => {
-          console.log('Download!')
+        createFragment((desc) => {
+          desc.appendText('You can download a ')
+          desc.createEl('a', {
+            text: 'snippet file',
+            href: 'https://github.com/GRA0007/obsidian-css-inlay-colors/blob/main/palettes.css',
+          })
+          desc.appendText(
+            ' with some predefined palettes. It comes with the following:',
+          )
         }),
       )
+      .addButton((button) => {
+        button
+          .setButtonText('Download')
+          .onClick(() => downloadPredefinedPalettes(this.app))
+      })
       .infoEl.createDiv({ cls: 'setting-item-description' })
       .createEl('ul', {
         text: createFragment((el) => {
